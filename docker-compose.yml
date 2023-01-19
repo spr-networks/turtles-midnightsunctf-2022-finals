@@ -1,0 +1,299 @@
+version: '3'
+
+networks:
+    default:
+      driver_opts:
+        com.docker.network.bridge.enable_icc: "false"
+
+services:
+  t1_ap:
+    init: true
+    container_name: t1_ap
+    build: t1_ap
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    entrypoint: ["/bin/sleep", "1000000000"]
+    volumes:
+      - ./flag1.txt:/flag.txt:ro
+  t1_sta2:
+    init: true
+    container_name: t1_sta2
+    build: t1_sta2
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    entrypoint: ["/bin/sleep", "1000000000"]
+  t1_attacker:
+    init: true
+    container_name: t1_attacker
+    build: t1_attacker
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    entrypoint: ["/bin/sleep", "1000000000"]
+    ports:
+      - "2222:22"
+  t2_ap:
+    init: true
+    container_name: t2_ap
+    build: t2_ap
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    entrypoint: ["/bin/sleep", "1000000000"]
+  t2_sta3:
+    init: true
+    container_name: t2_sta3
+    build: t2_sta3
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    entrypoint: ["/bin/sleep", "1000000000"]
+  t2_sta4:
+    init: true
+    container_name: t2_sta4
+    init: true
+    build: t2_sta4
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    entrypoint: ["/bin/sleep", "1000000000"]
+    volumes:
+      - ./flag2.txt:/flag.txt:ro
+  t3_ap:
+    init: true
+    container_name: t3_ap
+    build: t3_ap
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    entrypoint: ["/bin/sleep", "1000000000"]
+  t3_sta3:
+    init: true
+    container_name: t3_sta3
+    build: t3_sta3
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    entrypoint: ["/bin/sleep", "1000000000"]
+    volumes:
+      - ./flag3.txt:/flag.txt:ro
+  t4_ap:
+    init: true
+    container_name: t4_ap
+    build: t4_ap
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    entrypoint: ["/bin/sleep", "1000000000"]
+    environment:
+      - APIP=192.168.4.1
+      - CIP=192.168.5.2
+      - CIF=wlan31
+    volumes:
+      - ./tstack/id4_rsa.pub:/root/.ssh/authorized_keys:ro
+      - ./tstack/h4.conf:/h.conf:ro
+      - ./flag5.txt:/flag.txt:ro
+      - ./tstack/w4.conf:/w.conf:ro
+  t4_sta3:
+    init: true
+    container_name: t4_sta3
+    build: t4_sta3
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    entrypoint: ["/bin/sleep", "1000000000"]
+    volumes:
+      - ./tstack/id4_rsa:/root/.ssh/id_rsa:ro
+      - ./flag4.txt:/flag.txt:ro
+  t4_sta4:
+    init: true
+    container_name: t4_sta4
+    build: t4_sta4
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    entrypoint: ["/bin/sleep", "1000000000"]
+    environment:
+      - DIP=192.168.4.4
+      - CIP=192.168.4.1
+      - NIP=192.168.5.1
+    volumes:
+      - ./tstack/id4_rsa:/root/.ssh/id_rsa:ro
+      - ./tstack/w3.conf:/w.conf:ro
+  t5_ap:
+    init: true
+    container_name: t5_ap
+    build: t4_ap
+    init: true
+    entrypoint: ["/bin/sleep", "1000000000"]
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    environment:
+      - APIP=192.168.5.1
+      - CIP=192.168.6.2
+      - CIF=wlan26
+    volumes:
+      - ./tstack/id4_rsa.pub:/root/.ssh/authorized_keys:ro
+      - ./tstack/h5.conf:/h.conf:ro
+      - ./flag5.txt:/flag.txt:ro
+      - ./tstack/w5.conf:/w.conf:ro
+  t5_sta3:
+    init: true
+    container_name: t5_sta3
+    build: t4_sta4
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    entrypoint: ["/bin/sleep", "1000000000"]
+    environment:
+      - DIP=192.168.5.3
+      - CIP=192.168.5.1
+      - NIP=192.168.6.1
+    volumes:
+      - ./tstack/id5_rsa:/root/.ssh/id_rsa:ro
+      - ./tstack/w4.conf:/w.conf:ro
+  t6_ap:
+    container_name: t6_ap
+    init: true
+    build: t4_ap
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    entrypoint: ["/bin/sleep", "1000000000"]
+    environment:
+      - APIP=192.168.6.1
+      - CIP=192.168.7.2
+      - CIF=wlan27
+    volumes:
+      - ./tstack/id5_rsa.pub:/root/.ssh/authorized_keys:ro
+      - ./tstack/h6.conf:/h.conf:ro
+      - ./flag6.txt:/flag.txt:ro
+      - ./tstack/w6.conf:/w.conf:ro
+  t6_sta3:
+    init: true
+    container_name: t6_sta3
+    build: t4_sta4
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    entrypoint: ["/bin/sleep", "1000000000"]
+    environment:
+      - DIP=192.168.6.3
+      - CIP=192.168.6.1
+      - NIP=192.168.7.1
+    volumes:
+      - ./tstack/id6_rsa:/root/.ssh/id_rsa:ro
+      - ./tstack/w5.conf:/w.conf:ro
+  t7_ap:
+    container_name: t7_ap
+    init: true
+    build: t4_ap
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    entrypoint: ["/bin/sleep", "1000000000"]
+    environment:
+      - APIP=192.168.7.1
+      - CIP=192.168.8.2
+      - CIF=wlan28
+    volumes:
+      - ./tstack/id6_rsa.pub:/root/.ssh/authorized_keys:ro
+      - ./tstack/h7.conf:/h.conf:ro
+      - ./flag7.txt:/flag.txt:ro
+      - ./tstack/w7.conf:/w.conf:ro
+  t7_sta3:
+    init: true
+    container_name: t7_sta3
+    build: t4_sta4
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    entrypoint: ["/bin/sleep", "1000000000"]
+    environment:
+      - DIP=192.168.7.3
+      - CIP=192.168.7.1
+      - NIP=192.168.8.1
+    volumes:
+      - ./tstack/id7_rsa:/root/.ssh/id_rsa:ro
+      - ./tstack/w6.conf:/w.conf
+  t8_ap:
+    container_name: t8_ap
+    init: true
+    build: t4_ap
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    entrypoint: ["/bin/sleep", "1000000000"]
+    environment:
+      - APIP=192.168.8.1
+      - CIP=192.168.9.2
+      - CIF=wlan29
+    volumes:
+      - ./tstack/id7_rsa.pub:/root/.ssh/authorized_keys:ro
+      - ./tstack/h8.conf:/h.conf:ro
+      - ./flag8.txt:/flag.txt:ro
+      - ./tstack/w8.conf:/w.conf:ro
+  t8_sta3:
+    init: true
+    container_name: t8_sta3
+    build: t4_sta4
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    entrypoint: ["/bin/sleep", "1000000000"]
+    environment:
+      - DIP=192.168.8.3
+      - CIP=192.168.8.1
+      - NIP=192.168.9.1
+    volumes:
+      - ./tstack/id8_rsa:/root/.ssh/id_rsa:ro
+      - ./tstack/w7.conf:/w.conf
+  t9_ap:
+    container_name: t9_ap
+    init: true
+    build: t4_ap
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    entrypoint: ["/bin/sleep", "1000000000"]
+    environment:
+      - APIP=192.168.9.1
+      - CIP=192.168.10.2
+      - CIF=wlan30
+    volumes:
+      - ./tstack/id8_rsa.pub:/root/.ssh/authorized_keys:ro
+      - ./tstack/h9.conf:/h.conf:ro
+      - ./flag9.txt:/flag.txt:ro
+      - ./tstack/w9.conf:/w.conf:ro
+  t9_sta3:
+    init: true
+    container_name: t9_sta3
+    build: t4_sta4
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    entrypoint: ["/bin/sleep", "1000000000"]
+    environment:
+      - DIP=192.168.9.3
+      - CIP=192.168.9.1
+      - NIP=192.168.10.1
+    volumes:
+      - ./tstack/id9_rsa:/root/.ssh/id_rsa:ro
+      - ./tstack/w8.conf:/w.conf
+  t10_ap:
+    container_name: t10_ap
+    init: true
+    build: t4_ap
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    entrypoint: ["/bin/sleep", "1000000000"]
+    environment:
+      - APIP=192.168.10.1
+    volumes:
+      - ./tstack/id9_rsa.pub:/root/.ssh/authorized_keys:ro
+      - ./tstack/h10.conf:/h.conf:ro
+      - ./flag10.txt:/flag.txt:ro

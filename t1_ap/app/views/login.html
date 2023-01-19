@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>rooteradmin</title>
+  <style>
+	* {
+		font-family: "Consolas", "Monaco";
+	}
+	body { 
+		padding-top: 50px; 
+		font-size: 0.75rem;
+	}
+    
+	#login {
+		margin:0 auto;
+		width: 230px;
+		padding: 20px;
+	}
+
+	#login h1 {
+		text-align: center;
+	}
+	#login div {
+		padding: 5px 0;
+	}
+	#login input {
+		display: block; width: 80%;
+		margin: 0 auto;
+}
+	#login button {
+		display: block; width: 60%;
+		margin: 10px auto;
+	}
+
+	#msg {
+		text-align: center;
+	}
+
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="jumbotron">
+
+	<div id="login">
+		<h1>rootAPv0.1b</h1>
+
+		<div>
+			<input type="text" id="user" name="user" />
+		</div>
+		<div>
+			<input type="password" id="password" name="password" />
+		</div>
+
+		<button id="submit">login</button>
+
+		<div id="msg"></div>
+
+	</div>
+    </div>
+  </div>
+    
+</body>
+
+<script>
+
+let token = localStorage.getItem('token')
+if (token) {
+	console.log('got token:', token)
+	location.href='/admin'
+}
+
+document.getElementById('submit').onclick = async (e) => {
+	e.preventDefault()
+
+	let user = document.getElementById('user').value
+	let password = document.getElementById('password').value
+
+	let data = {user, password}
+
+	const response = await fetch('/login', {
+		method: 'POST',
+		mode: 'cors',
+		credentials: 'same-origin',
+		headers: {'Content-Type': 'application/json'},
+		body: JSON.stringify(data)
+	})
+
+	let res = await response.json()
+
+	if (!res.token) {
+		console.error('invalid password')
+		document.getElementById('msg').innerText = res.error
+
+		return
+	}
+
+	try {
+		let token = res.token
+		localStorage.setItem('token', token)
+		location.href='/admin'
+		//console.log('token:', token)
+	} catch (e) {
+	}
+}
+
+document.getElementById('password').addEventListener("keypress", function(event) {
+  if (event.key === "Enter") {
+	document.getElementById('submit').click()
+  }
+})
+
+</script>
+
+</html>

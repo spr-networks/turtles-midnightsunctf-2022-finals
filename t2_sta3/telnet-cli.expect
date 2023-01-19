@@ -1,0 +1,33 @@
+#!/usr/bin/expect
+
+#NOTE apt install -y expect
+# run with
+# ./telnet-cli.expect hostname user password cmd
+
+#If it all goes pear shaped the script will timeout after 20 seconds.
+set timeout 20
+
+set host [lindex $argv 0]
+set user [lindex $argv 1]
+set password [lindex $argv 2]
+set cmd [lindex $argv 3]
+
+#set host localhost
+#set user foo
+#set password foo
+
+spawn telnet $host
+#The script expects login
+expect "login:"
+#The script sends the user variable
+send "$user\n"
+#The script expects Password
+expect "Password:"
+#The script sends the password variable
+send "$password\n"
+
+#interact
+
+expect "# "
+send "$cmd\n"
+expect "# "

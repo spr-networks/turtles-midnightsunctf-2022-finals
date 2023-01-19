@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>rooteradmin</title>
+  <style>
+	* {
+		font-family: "Consolas", "Monaco";
+	}
+	body { 
+		padding-top: 50px; 
+		font-size: 0.75rem;
+	}
+	#res {
+		border-top: 1px solid #999;
+		border-bottom: 1px solid #999;
+		margin: 10px 0;
+	}
+
+	#res div {
+		padding: 10px 0;
+		cursor: pointer;
+	}
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="jumbotron">
+
+	<div id="plist">
+		<h1>port select</h1>
+		<a onclick="plist(80)">80</a>
+		<a onclick="plist(3000)">3000</a>
+		<a onclick="plist(8080)">8080</a>
+		<a onclick="plist(8081)">8081</a>
+	</div>
+
+	<div id="pkill">
+		<h1>process list</h1>
+
+		<div id="res"></div>
+
+		<div id="msg"></div>
+	</div>
+
+	<button id="logout" onclick="logout()">logout</button>
+    </div>
+  </div>
+    
+</body>
+
+<script>
+
+let token = localStorage.getItem('token')
+if (!token) {
+	location.href='/login'
+}
+
+async function plist(port) {
+
+	const response = await fetch(`/plist/${port}`, {
+		method: 'GET',
+		mode: 'cors',
+		credentials: 'same-origin',
+		headers: {'Content-Type': 'application/json', 'x-token': token},
+	})
+
+	let res = null
+	try {
+		res = await response.json()
+	} catch(err) {
+		document.getElementById('msg').innerText = `nothing listening on port ${port}`
+		document.getElementById('res').innerHTML = ''
+		return
+	}
+
+	if (!res) {
+		return console.log('empty res')
+	}
+
+	let div = document.createElement('div')
+	div.innerHTML = `<b>click to kill process</b>`
+
+	document.getElementById('res').appendChild(div)
+
+	res.map(row => {
+		let div = document.createElement('div')
+		div.innerHTML = `<b>PID</b> ${row.pid} <b>command</b> ${row.command} <b>user</b> ${row.user}`
+		div.setAttribute('data-pid', row.pid)
+
+		div.onclick = async () => {
+
+			const response = await fetch(`/pkill/${row.pid}`, {
+				method: 'GET',
+				mode: 'cors',
+				credentials: 'same-origin',
+				headers: {'Content-Type': 'application/json', 'x-token': token},
+			})
+
+			let res = await response.json()
+
+			if (res.error) {
+				document.getElementById('msg').innerText = res.error
+
+				return
+			}
+
+			console.log('result:', res)
+
+			location.reload()
+			
+		}
+
+		document.getElementById('res').appendChild(div)
+	})
+
+}
+
+plist(3000)
+
+function logout() {
+
+	if (window.confirm('logout?')) {
+		localStorage.removeItem('token')
+		location.href='/'
+	}
+
+}
+
+</script>
+
+</html>
