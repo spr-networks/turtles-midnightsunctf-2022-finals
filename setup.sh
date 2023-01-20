@@ -20,7 +20,7 @@ modprobe -r mac80211_hwsim
 modprobe mac80211_hwsim radios=32
 
 ATTACKER_PID=$(docker inspect --format='{{.State.Pid}}' t1_attacker)
-#ip link set hwsim0 netns $ATTACKER_PID
+ip link set hwsim0 netns $ATTACKER_PID
 
 set_iface_radio_group wlan0 2
 set_iface_radio_group wlan1 2
