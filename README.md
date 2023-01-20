@@ -1,5 +1,5 @@
 # About
-This was a wifi hacking challenge set up for midnight sun, which ran in August 22
+This was a wifi hacking challenge set up for midnight sun, which ran on-site during August 22 in Stockholm
 
 # How
 
@@ -12,15 +12,14 @@ To build and run:
 #./host-install.sh
 docker-compose build
 ./setup.sh
-ssh root@localhost -p 2222
+ssh root@localhost -p 2222 (password is mutant_n1nj4_turtle)
 ```
 
 # What
 
-Starting from the t1_attacker machine (you can ssh to the running host with root:mutant_n1nj4_turtle on port 2222)
-
-You should hack across the networks and pick up flags. Start by taking a look at hwsim0
+Starting from the t1_attacker machine, you should hack across the networks and pick up flags. 
+Start by taking a look at sniffing some wiress traffic with hwsim0
 
 # Questions?
 
-Feel free to contact us on the supernetworks discord https://discord.gg/EUjTKJPPAX
+Feel free to contact us at the supernetworks discord https://discord.gg/EUjTKJPPAX
